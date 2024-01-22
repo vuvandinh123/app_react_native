@@ -9,10 +9,10 @@ import {
 } from "react-native";
 import WebView from "react-native-webview";
 import Feather from "react-native-vector-icons/Feather";
+import { AppConfig } from "../../../app.config";
 
 const ModalWebPaypal = ({ showGateway, setShowGateway, onMessage, amount }) => {
   const [progClr, setProgClr] = useState("#000");
-
   const [prog, setProg] = useState(false);
   return (
     <SafeAreaView>
@@ -48,7 +48,7 @@ const ModalWebPaypal = ({ showGateway, setShowGateway, onMessage, amount }) => {
               </View>
             </View>
             <WebView
-              source={{ uri: "http://192.168.117.36:5173/" }}
+              source={{ uri: AppConfig.PAYPAL_URL }}
               style={{ flex: 1 }}
               injectedJavaScript={`
     window.reactNativeAmount = ${amount + 3} 

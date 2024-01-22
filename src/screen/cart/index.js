@@ -14,6 +14,7 @@ const CartScreen = () => {
     dispatch(setCartList([]));
   };
   const { cartAr } = useSelector((state) => state.cart);
+  console.log(cartAr);
   const total = cartAr?.reduce((a, b) => a + b.total, 0);
   return (
     <View className="h-full px-5 mt-14">

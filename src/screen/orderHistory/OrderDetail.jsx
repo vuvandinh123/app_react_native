@@ -1,20 +1,34 @@
 import React from "react";
 import { Text, View } from "react-native";
-import { TopBar } from "../../components/common";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import Icon2 from "react-native-vector-icons/Ionicons";
 
 const OrderDetail = ({ route }) => {
-  const { count, id ,phone,email,address,note} = route.params;
+  const { count, id, phone, email, address, note } = route.params;
   const navigation = useNavigation();
   const handlePressItems = () => {
-    navigation.navigate("OrderItems", { id:id });
+    navigation.navigate("OrderItems", { id: id });
   };
   return (
     <View className="px-5 mt-10">
-      <TopBar title={"Order #" + id} isSearch={true}></TopBar>
+      <View className="border-b border-gray-200 pb-4">
+        <View className="flex items-center justify-between  relative flex-row ">
+          <TouchableOpacity
+            onPress={() => navigation.navigate("OrderHistory")}
+            className="rounded-full w-10 h-10 bg-gray-200 flex justify-center items-center"
+          >
+            <Icon2 name="chevron-back" size={25} color={"black"}></Icon2>
+          </TouchableOpacity>
+          <Text className="font-bold capitalize   text-2xl">
+            {"Order details #" + id}
+          </Text>
+          <View></View>
+        </View>
+      </View>
+      {/* <TopBar title={"Order #" + id} isSearch={true}></TopBar> */}
       <View className="mt-5">
         <View>
           <View className="flex mb-8  flex-row items-center justify-between">
@@ -84,9 +98,7 @@ const OrderDetail = ({ route }) => {
                     size={30}
                   ></MaterialCommunityIcons>
                 </View>
-                <Text className="pr-5 font-bold text-base ">
-                  {count} items
-                </Text>
+                <Text className="pr-5 font-bold text-base ">{count} items</Text>
               </View>
               <Text className="text-blue-500 pr-5">View all</Text>
             </TouchableOpacity>
@@ -111,9 +123,7 @@ const OrderDetail = ({ route }) => {
               <View className="flex w-full mb-3 justify-between flex-col">
                 <Text className="text-gray-500">Note </Text>
                 <View className="border border-gray-300 rounded-md px-3 py-2 mt-3">
-                  <Text className="text-gray-500">
-                    {note || "No Note"}{" "}
-                  </Text>
+                  <Text className="text-gray-500">{note || "No Note"} </Text>
                 </View>
               </View>
             </View>

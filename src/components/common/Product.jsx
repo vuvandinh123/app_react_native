@@ -23,10 +23,10 @@ const Product = ({ data, handleToTop, layout }) => {
   const handleAddToCartPress = (data) => {
     const product = {
       name: data.name,
-      price: data.price,
+      price: Number(data.price),
       id: data.id,
       slug: data.slug,
-      image_url:data.image_url || data.images[0].image_url  ,
+      image_url: data.image_url || data.images[0].image_url,
     };
     dispatch(
       addToStatus({
@@ -46,13 +46,13 @@ const Product = ({ data, handleToTop, layout }) => {
           <View className="flex h-[200px] p-5 flex-row justify-center items-center">
             {data?.images && data?.images[0]?.image_url && (
               <Image
-              resizeMode="contain"
-              width={100}
-              height={100}
-              source={{
-                uri: `${AppURL.ImageUrl}${data?.images[0]?.image_url}`,
-              }}
-            />
+                resizeMode="contain"
+                width={100}
+                height={100}
+                source={{
+                  uri: `${AppURL.ImageUrl}${data?.images[0]?.image_url}`,
+                }}
+              />
             )}
             {data?.image_url && (
               <Image
@@ -78,7 +78,7 @@ const Product = ({ data, handleToTop, layout }) => {
             </Text>
           </TouchableOpacity>
           <Text className="text-sm font-medium mb-1 text-red-600">
-            {formatPrice(data.price)}
+            {formatPrice(Number(data.price))}
           </Text>
           <View className="flex flex-row  justify-between items-center">
             <View className="flex flex-row gap-2 items-center">

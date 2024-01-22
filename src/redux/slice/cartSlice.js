@@ -17,10 +17,16 @@ const cartSlice = createSlice({
                 cartAr: [...payload.payload]
             }
         },
+        deleteAllCart: (state, payload) => {
+            return {
+                ...state,
+                cartAr: []
+            }
+        },
         setOpenCart: (state, payload) => {
             return {
                 ...state,
-                open:{
+                open: {
                     ...state.open,
                     data: payload.payload.data,
                     isOpen: payload.payload.isOpen,
@@ -34,13 +40,13 @@ const cartSlice = createSlice({
                     cartAr: [...state.cartAr, { ...payload.payload, qty: 1, total: payload.payload.price }]
                 };
             } else {
-                const cartNew =  cloneDeep(state.cartAr);
+                const cartNew = cloneDeep(state.cartAr);
                 const objIndex = cartNew.findIndex((obj) => obj.id === payload.payload.id);
                 cartNew[objIndex].qty = cartNew[objIndex].qty + 1;
                 cartNew[objIndex].total = cartNew[objIndex].price * cartNew[objIndex].qty;
                 return {
                     ...state,
-                    open:{
+                    open: {
                         ...state.open,
                         isOpen: false,
                     },
@@ -65,7 +71,7 @@ const cartSlice = createSlice({
                 cartNew[objIndex].qty = cartNew[objIndex].qty - 1;
                 cartNew[objIndex].total = cartNew[objIndex].price * cartNew[objIndex].qty;
             }
-            else{
+            else {
                 cartNew.splice(objIndex, 1);
             }
             return {
@@ -80,7 +86,7 @@ const cartSlice = createSlice({
                 cartNew[objIndex].qty = payload.payload.qty;
                 cartNew[objIndex].total = cartNew[objIndex].price * cartNew[objIndex].qty;
             }
-            
+
             return {
                 ...state,
                 cartAr: cartNew
@@ -88,7 +94,7 @@ const cartSlice = createSlice({
         },
         DeleteCart: (state, payload) => {
             const cartNew = cloneDeep(state.cartAr);
-  
+
             const index = cartNew.findIndex((obj) => obj.id === payload.payload);
 
             if (index !== -1) {
@@ -103,5 +109,5 @@ const cartSlice = createSlice({
     }
 });
 
-export const { byToCart, DeleteCart, setCartList, plusToCart, minusToCart, qtyCart,setOpenCart } = cartSlice.actions;
+export const { byToCart, DeleteCart,deleteAllCart, setCartList, plusToCart, minusToCart, qtyCart, setOpenCart } = cartSlice.actions;
 export default cartSlice.reducer;

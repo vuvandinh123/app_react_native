@@ -1,16 +1,18 @@
 import React, { useCallback, useState } from "react";
 import { View, Text, TouchableOpacity, NativeEventEmitter, SafeAreaView, Modal, ActivityIndicator, StyleSheet } from "react-native";
 import AntDesign from "react-native-vector-icons/AntDesign";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { TopBar } from "../../components/common";
+import { Loading, TopBar } from "../../components/common";
 import WebView from "react-native-webview";
 import { SelectList } from "react-native-dropdown-select-list";
 import ModalWebPaypal from "./ModalWebPaypal";
 import ModalWebMomo from "./ModalWebMomo";
 import { postRequest } from "../../api/request"
-
+import { deleteAllCart } from "../../redux/slice/cartSlice";
+import image from "../../../assets/paypal.gif"
+import { Image } from "react-native";
 
 const CheckoutScreen = ({ route }) => {
     const [showGateway, setShowGateway] = useState(false);
@@ -20,11 +22,14 @@ const CheckoutScreen = ({ route }) => {
     const { user, token } = useSelector((state) => state.auth)
     const total = cartAr?.reduce((a, b) => a + b.total, 0);
     const navigation = useNavigation();
+    const [loading, setLoading] = useState(false);
     const [address, setAddress] = useState(null);
     const [selected, setSelected] = React.useState("Paypal");
     const [idMomo, setIdMomo] = useState(null);
+    const dispatch = useDispatch();
     const addOrder = async () => {
         const product = []
+        setLoading(true);
         for (let i = 0; i < cartAr.length; i++) {
             const element = cartAr[i];
             product.push({
@@ -51,13 +56,18 @@ const CheckoutScreen = ({ route }) => {
                 },
             });
             if (res) {
+                console.log("res",res);
+                setLoading(false);
                 navigation.navigate('CheckoutSuccess', { data: res });
 
             } else {
                 alert('that bai');
+                setLoading(false);
             }
         } catch (error) {
+            alert('that bai');
             console.log(error);
+            setLoading(false);
         }
     }
     const handlePressCheckout = () => {
@@ -93,6 +103,7 @@ const CheckoutScreen = ({ route }) => {
         let payment = JSON.parse(data);
         if (payment.status === 'COMPLETED') {
             await addOrder();
+            dispatch(deleteAllCart())
         } else {
             alert('PAYMENT FAILED. PLEASE TRY AGAIN.');
         }
@@ -102,7 +113,9 @@ const CheckoutScreen = ({ route }) => {
             const res = await postRequest("/checkOrder", { orderId: idMomo });
             if (res.resultCode == 0) {
                 await addOrder();
+                dispatch(deleteAllCart())
                 alert('PAYMENT SUCCESS.');
+
 
             }
             else {
@@ -140,6 +153,16 @@ const CheckoutScreen = ({ route }) => {
     };
     return (
         <View className="mt-10 relative h-[100vh]">
+            {
+                loading && (
+                    <Loading />
+                )
+            }
+            {/* <View className="absolute flex items-center justify-between top-0 left-0 right-0 bottom-0 bg-white z-10">
+                <Text className="mt-5 text-2xl font-bold text-red-500">VVD Store .</Text>
+                <Image  className="w-52 h-52" source={require("../../../assets/paypal.gif")}></Image>
+                <Text className="text-xl mt-5">Loading.....</Text>
+            </View> */}
             <View className="mx-5">
                 <TopBar title="Checkout" isSearch={true}></TopBar>
             </View>

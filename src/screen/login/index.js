@@ -13,6 +13,7 @@ import { getRequest, postRequest } from "../../api/request";
 const LoginScreen = ({ route }) => {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
+  const [loading, setLoading] = React.useState(false);
   const previousRoute = route;
   const navigation = useNavigation();
   const dispatch = useDispatch();
@@ -21,6 +22,15 @@ const LoginScreen = ({ route }) => {
   };
 
   const handlePressLogin = async () => {
+    setLoading(true);
+    if(email === "" || password === "") {
+      Toast.show({
+        type: "error",
+        text1: "Email and password is required",
+      })
+      setLoading(false);
+      return;
+    }
     const response = await postRequest("auth/login", { email, password });
     if (response) {
       const token = response.access_token;
@@ -36,12 +46,14 @@ const LoginScreen = ({ route }) => {
       dispatch(setToken(token));
       dispatch(setUser(response2))
       AsyncStorage.setItem("token", token);
+      setLoading(false);
       navigation.goBack();
       Toast.show({
         type: "success",
         text1: "Login Success",
       });
     } else {
+      setLoading(false);
       Toast.show({
         type: "error",
         text1: "Login Failure",
@@ -49,7 +61,7 @@ const LoginScreen = ({ route }) => {
       });
     }
   };
-  const handleForgotpasswordPress = ()=>{
+  const handleForgotpasswordPress = () => {
     navigation.navigate("ForgotPassword")
   }
   return (
@@ -79,7 +91,7 @@ const LoginScreen = ({ route }) => {
             onPress={handlePressLogin}
             className="bg-blue-500 rounded-lg mt-5 px-5 py-2"
           >
-            <Text className=" text-center text-2xl text-white">Login</Text>
+            <Text className=" text-center text-2xl text-white">{loading ? "Loading..." : "Login"}</Text>
           </TouchableOpacity>
         </View>
         <View className="flex flex-row items-center gap-1 mt-5">

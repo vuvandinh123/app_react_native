@@ -30,6 +30,7 @@ const OrderItem = ({ route }) => {
   };
   return (
     <View className="px-5 mt-10 h-full">
+      
       <TopBar title={"Order details #" + id} isSearch={true}></TopBar>
       <View className="mt-2">
         <ScrollView className="h-[62vh]">
